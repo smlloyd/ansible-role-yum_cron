@@ -1,0 +1,36 @@
+---
+# tasks file for yum_cron
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    "{{ yum_cron__packages }}"
+
+- name: Select hourly config
+  set_fact:
+    yum_cron__config: "{{ yum_cron__hourly }}"
+
+- name: Manage hourly yum-cron-hourly.conf
+  template:
+    src: "yum-cron.conf.j2"
+    dest: "{{ yum_cron__hourly_config }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - restart yum-cron
+
+- name: Select daily config
+  set_fact:
+    yum_cron__config: "{{ yum_cron__daily }}"
+
+- name: Manage daily yum-cron.conf
+  template:
+    src: "yum-cron.conf.j2"
+    dest: "{{ yum_cron__daily_config }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - restart yum-cron

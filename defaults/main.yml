@@ -1,0 +1,39 @@
+---
+# defaults file for yum_cron
+
+yum_cron__packages:
+  - yum-cron
+yum_cron__service: yum-cron
+yum_cron__daily_config: /etc/yum/yum-cron.conf
+yum_cron__hourly_config: /etc/yum/yum-cron-hourly.conf
+
+# define default values (which can be overridden by hourly/daily below)
+yum_cron__defaults:
+  update_cmd: default
+  update_messages: 'yes'
+  download_updates: 'yes'
+  apply_updates: 'no'
+  random_sleep: 360
+  system_name: 'None'
+  emit_via: stdio
+  output_width: 80
+  email_from: root@localhost
+  email_to:
+    - root
+  email_host: localhost
+  group_list:
+    - 'None'
+  group_package_types:
+    - mandatory
+    - default
+  debuglevel: -2
+  mdpolicy: group:main
+
+# hourly security updates are downloaded and installed
+yum_cron__hourly:
+  update_cmd: security
+  apply_updates: 'yes'
+  random_sleep: 60
+
+# go with defaults for daily - download and notify all updates, but don't install anything
+yum_cron__daily: {}

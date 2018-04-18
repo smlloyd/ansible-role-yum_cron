@@ -1,0 +1,7 @@
+---
+# handlers file for yum_cron
+- name: restart yum-cron
+  service:
+    name: "{{ yum_cron__service }}"
+    enabled: yes
+    state: restarted
