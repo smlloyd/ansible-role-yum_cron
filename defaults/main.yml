@@ -3,6 +3,8 @@
 
 yum_cron__packages:
   - yum-cron
+  - yum-plugin-security
+
 yum_cron__service: yum-cron
 yum_cron__daily_config: /etc/yum/yum-cron.conf
 yum_cron__hourly_config: /etc/yum/yum-cron-hourly.conf

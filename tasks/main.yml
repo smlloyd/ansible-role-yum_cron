@@ -1,5 +1,14 @@
 ---
 # tasks file for yum_cron
+
+- name: Load variables.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
 - name: Install packages
   package:
     name: "{{ item }}"
@@ -34,3 +43,22 @@
     group: root
   notify:
     - restart yum-cron
+
+- block:
+    - name: Download latest Centos errata.
+      get_url:
+        url: "{{ yum_cron__centos_errata_url }}"
+        dest: /tmp/updateinfo.xml
+        mode: 0440
+    - name: Add errata to updates repo
+      command: /usr/bin/modifyrepo --simple-md-filenames /tmp/updateinfo.xml "{{ yum_cron__centos_updates_repo }}"
+      args:
+        creates: "{{ yum_cron__centos_updates_repo }}/updateinfo.xml.gz"
+    - name: Cron job to download errata daily.
+      cron:
+        name: CentOS Errata
+        special_time: daily
+        user: root
+        job: "/usr/bin/wget -qN -P/tmp {{ yum_cron__centos_errata_url }} && /usr/bin/modifyrepo --simple-md-filenames /tmp/updateinfo.xml {{ yum_cron__centos_updates_repo }} > /dev/null"
+        cron_file: CentOS_Errata
+  when: ansible_distribution == 'CentOS'

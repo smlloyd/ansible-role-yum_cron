@@ -1,0 +1,4 @@
+---
+yum_cron__packages:
+  - yum-cron
+  - yum-plugin-security
