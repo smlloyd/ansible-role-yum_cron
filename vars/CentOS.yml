@@ -5,8 +5,5 @@ yum_cron__packages:
   - wget
   - createrepo
 
-yum_cron__centos_errata_url: 'https://simon.pages.slloyd.net/centos-update-info/7/updateinfo.xml'
-
+#### yum_cron__centos_errata_url: #YOU NEED TO ADD YOUR OWN HERE! #####
 yum_cron__centos_updates_repo: /var/cache/yum/x86_64/7/updates
-
-
